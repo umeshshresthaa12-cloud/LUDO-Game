@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Crossway Restaurant - Dice Discount</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        :root {
+            --primary-red: #e63946;
+            --primary-gold: #ffd700;
+            --primary-white: #ffffff;
+            --dark-red: #c1121f;
+            --dark-gold: #daa520;
+            --light-bg: #fff9f9;
+            --shadow: rgba(0, 0, 0, 0.15);
+            --success-green: #2ecc71;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, var(--light-bg) 100%);
+            touch-action: manipulation;
+            color: #333;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        /* ===== TOP HEADER SECTION ===== */
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .restaurant-name {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .game-tagline {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-red);
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* ===== MIDDLE SECTION - DICE & DISCOUNT ===== */
+        .dice-section {
+            background: white;
+            border-radius: 25px;
+            padding: 30px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid var(--primary-gold);
+            text-align: center;
+        }
+
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0;
+            perspective: 1000px;
+        }
+
+        .dice-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .dice {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s ease-out;
+            transform-origin: center;
+        }
+
+        .dice.rolling {
+            animation: rollDice 1.2s ease-out;
+        }
+
+        @keyframes rollDice {
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            25% { transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg); }
+            50% { transform: rotateX(360deg) rotateY(90deg) rotateZ(180deg); }
+            75% { transform: rotateX(540deg) rotateY(180deg) rotateZ(270deg); }
+            100% { transform: rotateX(720deg) rotateY(360deg) rotateZ(360deg); }
+        }
+
+        .dice-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 3rem;
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1),
+                        0 8px 15px rgba(0, 0, 0, 0.15);
+            border: 5px solid white;
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+        }
+
+        /* Dice faces positioning */
+        .face-1 { transform: translateZ(60px); }
+        .face-2 { transform: rotateY(90deg) translateZ(60px); }
+        .face-3 { transform: rotateY(180deg) translateZ(60px); }
+        .face-4 { transform: rotateY(-90deg) translateZ(60px); }
+        .face-5 { transform: rotateX(90deg) translateZ(60px); }
+        .face-6 { transform: rotateX(-90deg) translateZ(60px); }
+
+        /* Discount Display */
+        .discount-display {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .discount-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .discount-value {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .discount-value.winner {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== ROLL BUTTON ===== */
+        .roll-button-container {
+            margin: 25px 0;
+        }
+
+        .roll-button {
+            background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
+            color: var(--primary-red);
+            border: none;
+            padding: 22px 30px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(230, 57, 70, 0.4);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 70px;
+        }
+
+        .roll-button:active {
+            transform: scale(0.97);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .roll-button:disabled {
+            background: #95a5a6;
+            color: #7f8c8d;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none !important;
+        }
+
+        /* Status Message */
+        .status-message {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #eee;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-message i {
+            margin-right: 10px;
+            color: var(--primary-red);
+        }
+
+        /* ===== BOTTOM SECTION - RULES ===== */
+        .rules-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary-red);
+        }
+
+        .rules-title {
+            color: var(--primary-red);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-gold);
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .rule-item:last-child {
+            border-bottom: none;
+        }
+
+        .rule-icon {
+            color: var(--primary-red);
+            font-size: 1.2rem;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .rule-text {
+            flex: 1;
+        }
+
+        /* Timer Section */
+        .timer-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #eee;
+        }
+
+        .timer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .countdown-timer {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: var(--dark-red);
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            letter-spacing: 2px;
+            border: 2px solid var(--primary-gold);
+        }
+
+        /* ===== FOOTER AREA ===== */
+        .footer-section {
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: 20px;
+            border-top: 3px solid var(--primary-gold);
+        }
+
+        .powered-by {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* ===== RESULT OVERLAY WITH ANTI-MISUSE FEATURES ===== */
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 20px;
+        }
+
+        .result-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .result-dialog {
+            background: white;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+        }
+
+        .result-overlay.active .result-dialog {
+            transform: scale(1);
+        }
+
+        .result-header {
+            color: var(--primary-red);
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-discount {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: var(--primary-gold);
+            text-shadow: 3px 3px 0 var(--primary-red);
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(255, 215, 0, 0.1));
+        }
+
+        /* NEW: Validity Warning */
+        .validity-warning {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            color: #856404;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+
+        /* NEW: Reference Code Display */
+        .reference-code-section {
+            background: #f8f9fa;
+            border: 2px dashed #e63946;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .reference-code-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .reference-code {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: var(--primary-red);
+            letter-spacing: 3px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-gold);
+        }
+
+        /* NEW: Redeemed State */
+        .redeemed-badge {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            display: inline-block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* NEW: Expired State */
+        .expired-badge {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            display: inline-block;
+        }
+
+        .result-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            font-size: 1.1rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        /* NEW: Time details */
+        .time-details {
+            font-size: 0.95rem;
+            color: #666;
+            text-align: center;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        .jackpot-banner {
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700);
+            color: var(--primary-red);
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin: 20px 0;
+            animation: jackpotPulse 1.5s infinite;
+        }
+
+        @keyframes jackpotPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* NEW: Redeem Button */
+        .redeem-button {
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 15px 0;
+            min-height: 60px;
+        }
+
+        .redeem-button:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .redeem-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none;
+        }
+
+        .redeem-button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .share-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .share-button {
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 60px;
+        }
+
+        .share-button:active {
+            transform: scale(0.97);
+        }
+
+        .whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .messenger {
+            background: #0084FF;
+            color: white;
+        }
+
+        .close-button {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            min-height: 60px;
+        }
+
+        /* NEW: Anti-screenshot protection */
+        .screenshot-protection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 0, 0, 0.05),
+                rgba(255, 0, 0, 0.05) 10px,
+                rgba(0, 0, 255, 0.05) 10px,
+                rgba(0, 0, 255, 0.05) 20px
+            );
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .redeemed .screenshot-protection {
+            opacity: 0.7;
+        }
+
+        /* ===== ADMIN SECTION ===== */
+        .admin-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .admin-button {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #666;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .restaurant-name {
+                font-size: 2.2rem;
+            }
+            
+            .game-tagline {
+                font-size: 1.5rem;
+            }
+            
+            .game-subtitle {
+                font-size: 1rem;
+                padding: 6px 15px;
+            }
+            
+            .dice-wrapper {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .dice-face {
+                font-size: 2.5rem;
+                border-radius: 15px;
+            }
+            
+            .discount-value {
+                font-size: 3.5rem;
+            }
+            
+            .roll-button {
+                font-size: 1.4rem;
+                padding: 20px;
+                min-height: 65px;
+            }
+            
+            .rules-title {
+                font-size: 1.6rem;
+            }
+            
+            .rule-item {
+                font-size: 1rem;
+            }
+            
+            .reference-code {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+            
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .restaurant-name {
+                font-size: 1.9rem;
+            }
+            
+            .game-tagline {
+                font-size: 1.3rem;
+            }
+            
+            .dice-container {
+                gap: 15px;
+            }
+            
+            .dice-wrapper {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .dice-face {
+                font-size: 2.2rem;
+            }
+            
+            .roll-button {
+                font-size: 1.3rem;
+                padding: 18px;
+            }
+        }
+
+        /* Confetti animation */
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+        }
+
+        /* Prevent text selection */
+        .dice, .dice-face, .roll-button {
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP HEADER SECTION -->
+    <div class="header-container">
+        <h1 class="restaurant-name">CROSSWAY RESTAURANT</h1>
+        <div class="game-tagline">ROLL THE DICE & WIN DISCOUNT</div>
+        <div class="game-subtitle">Get 2% to 12% OFF Instantly</div>
+    </div>
+
+    <!-- MIDDLE SECTION - DICE & DISCOUNT -->
+    <main class="dice-section">
+        <div class="dice-container">
+            <div class="dice-wrapper">
+                <div class="dice" id="dice1">
+                    <div class="dice-face face-1">1</div>
+                    <div class="dice-face face-2">2</div>
+                    <div class="dice-face face-3">3</div>
+                    <div class="dice-face face-4">4</div>
+                    <div class="dice-face face-5">5</div>
+                    <div class="dice-face face-6">6</div>
+                </div>
+            </div>
+            
+            <div class="dice-wrapper">
+                <div class="dice" id="dice2">
+                    <div class="dice-face face-1">1</div>
+                    <div class="dice-face face-2">2</div>
+                    <div class="dice-face face-3">3</div>
+                    <div class="dice-face face-4">4</div>
+                    <div class="dice-face face-5">5</div>
+                    <div class="dice-face face-6">6</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discount Display -->
+        <div class="discount-display">
+            <div class="discount-label">YOUR DISCOUNT:</div>
+            <div class="discount-value" id="discount-percent">0%</div>
+        </div>
+
+        <!-- Roll Button -->
+        <div class="roll-button-container">
+            <button class="roll-button" id="roll-button">
+                <i class="fas fa-dice"></i> ROLL DICE FOR DISCOUNT
+            </button>
+        </div>
+
+        <!-- Status Message -->
+        <div class="status-message" id="status-message">
+            <i class="fas fa-info-circle"></i>
+            <span id="status-text">Tap the button to roll dice!</span>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-section">
+            <div class="timer-title">
+                <i class="fas fa-clock"></i> NEXT ROLL IN
+            </div>
+            <div class="countdown-timer" id="countdown-timer">
+                00:00:00
+            </div>
+        </div>
+    </main>
+
+    <!-- BOTTOM SECTION - RULES -->
+    <section class="rules-section">
+        <h2 class="rules-title">GAME RULES</h2>
+        <ul class="rules-list">
+            <li class="rule-item">
+                <span class="rule-icon">•</span>
+                <span class="rule-text">One roll per day per device</span>
+            </li>
+            <li class="rule-item">
+                <span class="rule-icon">•</span>
+                <span class="rule-text">Discount valid on same day only</span>
+            </li>
+            <li class="rule-item">
+                <span class="rule-icon">•</span>
+                <span class="rule-text">Show result to cashier</span>
+            </li>
+            <li class="rule-item">
+                <span class="rule-icon">•</span>
+                <span class="rule-text">Cannot re-roll after playing</span>
+            </li>
+            <li class="rule-item">
+                <span class="rule-icon">•</span>
+                <span class="rule-text">Valid for dine-in and takeaway</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- FOOTER AREA -->
+    <footer class="footer-section">
+        <div class="powered-by">Powered by Crossway Restaurant</div>
+        <div class="copyright">© 2024 Crossway Restaurant. All rights reserved.</div>
+        
+        <!-- Admin Section -->
+        <div class="admin-section">
+            <div style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">
+                Today's Rolls: <span id="roll-counter">0</span>
+            </div>
+            <button class="admin-button" id="admin-reset">
+                <i class="fas fa-redo"></i> Staff Reset
+            </button>
+        </div>
+    </footer>
+
+    <!-- RESULT OVERLAY WITH ANTI-MISUSE FEATURES -->
+    <div class="result-overlay" id="result-overlay">
+        <div class="result-dialog" id="result-dialog">
+            <!-- Anti-screenshot protection overlay -->
+            <div class="screenshot-protection"></div>
+            
+            <div class="result-header">🎉 CONGRATULATIONS! 🎉</div>
+            <div class="result-discount" id="result-discount">0%</div>
+            
+            <!-- Validity Warning -->
+            <div class="validity-warning">
+                <i class="fas fa-exclamation-circle"></i>
+                Valid only for today and one-time use
+            </div>
+            
+            <!-- Reference Code -->
+            <div class="reference-code-section">
+                <div class="reference-code-label">REFERENCE CODE</div>
+                <div class="reference-code" id="reference-code">000000</div>
+                <div class="time-details" id="time-details"></div>
+            </div>
+            
+            <!-- Redeemed/Expired Badge -->
+            <div id="status-badge" style="display: none;"></div>
+            
+            <div id="jackpot-banner" class="jackpot-banner" style="display: none;">
+                🎊 JACKPOT WINNER! 🎊
+            </div>
+            
+            <!-- Redeem Button -->
+            <button class="redeem-button" id="redeem-button">
+                <i class="fas fa-check-circle"></i> MARK AS REDEEMED
+            </button>
+            
+            <div class="result-details">
+                <div class="detail-row">
+                    <span class="detail-label">Your Discount:</span>
+                    <span class="detail-value" id="detail-discount">0%</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Dice Roll:</span>
+                    <span class="detail-value" id="detail-dice">0 + 0 = 0</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value" id="detail-date">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time:</span>
+                    <span class="detail-value" id="detail-time">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valid Until:</span>
+                    <span class="detail-value">Today 11:59 PM</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" id="detail-status">Active</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Restaurant:</span>
+                    <span class="detail-value">Crossway Restaurant</span>
+                </div>
+            </div>
+            
+            <div class="share-buttons">
+                <button class="share-button whatsapp" id="whatsapp-share">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="share-button messenger" id="messenger-share">
+                    <i class="fab fa-facebook-messenger"></i> Messenger
+                </button>
+            </div>
+            
+            <button class="close-button" id="close-result">
+                <i class="fas fa-times"></i> CLOSE
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ===== ANTI-MISUSE FEATURES ADDED =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Game initialized with anti-misuse features");
+            
+            // DOM Elements
+            const dice1 = document.getElementById('dice1');
+            const dice2 = document.getElementById('dice2');
+            const rollButton = document.getElementById('roll-button');
+            const resultOverlay = document.getElementById('result-overlay');
+            const resultDialog = document.getElementById('result-dialog');
+            const discountPercent = document.getElementById('discount-percent');
+            const statusText = document.getElementById('status-text');
+            const resultDiscount = document.getElementById('result-discount');
+            const detailDiscount = document.getElementById('detail-discount');
+            const detailDice = document.getElementById('detail-dice');
+            const detailDate = document.getElementById('detail-date');
+            const detailTime = document.getElementById('detail-time');
+            const detailStatus = document.getElementById('detail-status');
+            const countdownTimer = document.getElementById('countdown-timer');
+            const jackpotBanner = document.getElementById('jackpot-banner');
+            const closeResultButton = document.getElementById('close-result');
+            const whatsappShareButton = document.getElementById('whatsapp-share');
+            const messengerShareButton = document.getElementById('messenger-share');
+            const adminResetButton = document.getElementById('admin-reset');
+            const rollCounterElement = document.getElementById('roll-counter');
+            
+            // NEW: Anti-misuse elements
+            const referenceCodeElement = document.getElementById('reference-code');
+            const timeDetailsElement = document.getElementById('time-details');
+            const statusBadgeElement = document.getElementById('status-badge');
+            const redeemButton = document.getElementById('redeem-button');
+            
+            // Game State with anti-misuse properties
+            let gameState = {
+                dice1Value: 1,
+                dice2Value: 1,
+                lastRollTime: null,
+                discount: 0,
+                dailyRolls: 0,
+                isJackpot: false,
+                // NEW: Anti-misuse properties
+                referenceCode: "000000",
+                isRedeemed: false,
+                redemptionTime: null,
+                rollDate: null,
+                rollDateTime: null
+            };
+            
+            // Timer Variables
+            let countdownInterval;
+            let timeLeft = 0;
+            
+            // Initialize Game
+            function initGame() {
+                loadGameState();
+                setDiceFace(dice1, 1);
+                setDiceFace(dice2, 1);
+                checkRollStatus();
+                updateUI();
+                updateTimerDisplay();
+                startCountdown();
+                setupEventListeners();
+                preventMobileIssues();
+                
+                // NEW: Check if current roll is expired
+                checkExpiry();
+            }
+            
+            function loadGameState() {
+                try {
+                    const savedState = localStorage.getItem('crosswayDiceUniversal');
+                    if (savedState) {
+                        const parsedState = JSON.parse(savedState);
+                        gameState = {
+                            dice1Value: parsedState.dice1Value || 1,
+                            dice2Value: parsedState.dice2Value || 1,
+                            lastRollTime: parsedState.lastRollTime ? new Date(parsedState.lastRollTime) : null,
+                            discount: parsedState.discount || 0,
+                            dailyRolls: parsedState.dailyRolls || 0,
+                            isJackpot: parsedState.isJackpot || false,
+                            // NEW: Load anti-misuse properties
+                            referenceCode: parsedState.referenceCode || generateReferenceCode(),
+                            isRedeemed: parsedState.isRedeemed || false,
+                            redemptionTime: parsedState.redemptionTime ? new Date(parsedState.redemptionTime) : null,
+                            rollDate: parsedState.rollDate ? new Date(parsedState.rollDate) : null,
+                            rollDateTime: parsedState.rollDateTime || null
+                        };
+                    } else {
+                        // Generate initial reference code
+                        gameState.referenceCode = generateReferenceCode();
+                    }
+                } catch (e) {
+                    resetGameState();
+                }
+            }
+            
+            function saveGameState() {
+                try {
+                    localStorage.setItem('crosswayDiceUniversal', JSON.stringify(gameState));
+                } catch (e) {
+                    console.error("Error saving game state:", e);
+                }
+            }
+            
+            function resetGameState() {
+                gameState = {
+                    dice1Value: 1,
+                    dice2Value: 1,
+                    lastRollTime: null,
+                    discount: 0,
+                    dailyRolls: 0,
+                    isJackpot: false,
+                    // NEW: Reset anti-misuse properties
+                    referenceCode: generateReferenceCode(),
+                    isRedeemed: false,
+                    redemptionTime: null,
+                    rollDate: null,
+                    rollDateTime: null
+                };
+                saveGameState();
+            }
+            
+            // NEW: Generate unique 6-digit reference code
+            function generateReferenceCode() {
+                // Generate a random 6-digit number
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                console.log("Generated reference code:", code);
+                return code;
+            }
+            
+            // NEW: Check if discount is expired (after midnight)
+            function checkExpiry() {
+                if (!gameState.rollDate) return;
+                
+                const now = new Date();
+                const rollDate = new Date(gameState.rollDate);
+                const isExpired = now.getDate() !== rollDate.getDate() || 
+                                 now.getMonth() !== rollDate.getMonth() || 
+                                 now.getFullYear() !== rollDate.getFullYear();
+                
+                if (isExpired && gameState.discount > 0) {
+                    // Mark as expired
+                    gameState.isRedeemed = true;
+                    gameState.redemptionTime = now;
+                    saveGameState();
+                    updateUI();
+                }
+            }
+            
+            function checkRollStatus() {
+                const now = new Date();
+                const lastRoll = gameState.lastRollTime;
+                
+                if (!lastRoll) {
+                    rollButton.disabled = false;
+                    timeLeft = 0;
+                    return true;
+                }
+                
+                const timeDiff = Math.floor((now - lastRoll) / 1000);
+                const twentyFourHours = 24 * 60 * 60;
+                
+                if (timeDiff >= twentyFourHours) {
+                    rollButton.disabled = false;
+                    timeLeft = 0;
+                    return true;
+                } else {
+                    rollButton.disabled = true;
+                    timeLeft = twentyFourHours - timeDiff;
+                    return false;
+                }
+            }
+            
+            function updateTimerDisplay() {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+                
+                countdownTimer.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                rollButton.disabled = timeLeft > 0;
+            }
+            
+            function startCountdown() {
+                clearInterval(countdownInterval);
+                
+                if (timeLeft > 0) {
+                    countdownInterval = setInterval(() => {
+                        if (timeLeft > 0) {
+                            timeLeft--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(countdownInterval);
+                            rollButton.disabled = false;
+                        }
+                    }, 1000);
+                }
+            }
+            
+            function setDiceFace(diceElement, face) {
+                let rotationX = 0;
+                let rotationY = 0;
+                
+                switch(face) {
+                    case 1: rotationX = 0; rotationY = 0; break;
+                    case 2: rotationX = 0; rotationY = -90; break;
+                    case 3: rotationX = 0; rotationY = -180; break;
+                    case 4: rotationX = 0; rotationY = 90; break;
+                    case 5: rotationX = -90; rotationY = 0; break;
+                    case 6: rotationX = 90; rotationY = 0; break;
+                }
+                
+                diceElement.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            }
+            
+            function rollDice() {
+                if (!checkRollStatus()) {
+                    showMessage("Please wait for the timer to reset");
+                    return;
+                }
+                
+                rollButton.disabled = true;
+                statusText.textContent = "Rolling dice...";
+                
+                dice1.classList.add('rolling');
+                dice2.classList.add('rolling');
+                
+                const dice1Value = getRandomDiceValue();
+                const dice2Value = getRandomDiceValue();
+                
+                let discount = dice1Value + dice2Value;
+                let isJackpot = false;
+                
+                if (dice1Value === 6 && dice2Value === 6) {
+                    isJackpot = true;
+                    discount = 15;
+                }
+                
+                const now = new Date();
+                
+                // Update game state with anti-misuse data
+                gameState.dice1Value = dice1Value;
+                gameState.dice2Value = dice2Value;
+                gameState.discount = discount;
+                gameState.lastRollTime = now;
+                gameState.dailyRolls++;
+                gameState.isJackpot = isJackpot;
+                // NEW: Set anti-misuse properties
+                gameState.referenceCode = generateReferenceCode();
+                gameState.isRedeemed = false;
+                gameState.redemptionTime = null;
+                gameState.rollDate = now;
+                gameState.rollDateTime = now.toISOString();
+                
+                saveGameState();
+                
+                if (navigator.vibrate) {
+                    try {
+                        navigator.vibrate(100);
+                    } catch (e) {}
+                }
+                
+                setTimeout(() => {
+                    dice1.classList.remove('rolling');
+                    dice2.classList.remove('rolling');
+                    
+                    setDiceFace(dice1, dice1Value);
+                    setDiceFace(dice2, dice2Value);
+                    
+                    showResult(dice1Value, dice2Value, discount, isJackpot);
+                    
+                    timeLeft = 24 * 60 * 60;
+                    startCountdown();
+                    updateUI();
+                }, 1200);
+            }
+            
+            function getRandomDiceValue() {
+                return Math.floor(Math.random() * 6) + 1;
+            }
+            
+            function showResult(dice1Value, dice2Value, discount, isJackpot) {
+                // Update discount display
+                discountPercent.textContent = `${discount}%`;
+                discountPercent.classList.add('winner');
+                
+                // Update result dialog
+                resultDiscount.textContent = `${discount}%`;
+                detailDiscount.textContent = `${discount}% ${isJackpot ? '(JACKPOT!)' : ''}`;
+                detailDice.textContent = `${dice1Value} + ${dice2Value} = ${dice1Value + dice2Value}`;
+                
+                // NEW: Format date and time separately
+                const now = new Date();
+                const dateOptions = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                const timeOptions = {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+                
+                detailDate.textContent = now.toLocaleDateString('en-US', dateOptions);
+                detailTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+                
+                // NEW: Update reference code and time details
+                referenceCodeElement.textContent = gameState.referenceCode;
+                timeDetailsElement.textContent = `Generated at ${now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}`;
+                
+                // Update status
+                if (gameState.isRedeemed) {
+                    detailStatus.textContent = "Redeemed";
+                    detailStatus.style.color = "#28a745";
+                    redeemButton.disabled = true;
+                    redeemButton.innerHTML = '<i class="fas fa-check-double"></i> ALREADY REDEEMED';
+                    
+                    // Show redeemed badge
+                    statusBadgeElement.innerHTML = '<div class="redeemed-badge"><i class="fas fa-check-circle"></i> REDEEMED</div>';
+                    statusBadgeElement.style.display = 'block';
+                    
+                    // Activate screenshot protection
+                    resultDialog.classList.add('redeemed');
+                } else {
+                    detailStatus.textContent = "Active";
+                    detailStatus.style.color = "#e63946";
+                    redeemButton.disabled = false;
+                    redeemButton.innerHTML = '<i class="fas fa-check-circle"></i> MARK AS REDEEMED';
+                    
+                    // Hide status badge
+                    statusBadgeElement.style.display = 'none';
+                    
+                    // Remove screenshot protection
+                    resultDialog.classList.remove('redeemed');
+                }
+                
+                // Check expiry
+                checkExpiry();
+                if (gameState.isRedeemed && gameState.redemptionTime) {
+                    const redemptionTime = new Date(gameState.redemptionTime);
+                    timeDetailsElement.textContent += ` • Redeemed at ${redemptionTime.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}`;
+                }
+                
+                // Show/hide jackpot banner
+                if (isJackpot) {
+                    jackpotBanner.style.display = 'block';
+                } else {
+                    jackpotBanner.style.display = 'none';
+                }
+                
+                // Show overlay
+                resultOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                createCelebrationEffects(isJackpot);
+            }
+            
+            // NEW: Mark as redeemed function
+            function markAsRedeemed() {
+                if (gameState.isRedeemed) {
+                    showMessage("This discount has already been redeemed!");
+                    return;
+                }
+                
+                const now = new Date();
+                gameState.isRedeemed = true;
+                gameState.redemptionTime = now;
+                saveGameState();
+                
+                // Update UI
+                detailStatus.textContent = "Redeemed";
+                detailStatus.style.color = "#28a745";
+                redeemButton.disabled = true;
+                redeemButton.innerHTML = '<i class="fas fa-check-double"></i> ALREADY REDEEMED';
+                
+                // Show redeemed badge
+                statusBadgeElement.innerHTML = '<div class="redeemed-badge"><i class="fas fa-check-circle"></i> REDEEMED</div>';
+                statusBadgeElement.style.display = 'block';
+                
+                // Activate screenshot protection
+                resultDialog.classList.add('redeemed');
+                
+                // Update time details
+                timeDetailsElement.textContent += ` • Redeemed at ${now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}`;
+                
+                // Show confirmation
+                showMessage("Discount marked as redeemed! Screenshot protection activated.");
+                
+                // Add haptic feedback
+                if (navigator.vibrate) {
+                    try {
+                        navigator.vibrate([100, 50, 100]);
+                    } catch (e) {}
+                }
+            }
+            
+            function createCelebrationEffects(isJackpot) {
+                const resultDialog = document.querySelector('.result-dialog');
+                const existingConfetti = document.querySelectorAll('.confetti');
+                existingConfetti.forEach(c => c.remove());
+                
+                const confettiCount = isJackpot ? 150 : 80;
+                const colors = isJackpot ? 
+                    ['#FFD700', '#FF6B6B', '#4ECDC4', '#FFD700'] : 
+                    ['#E63946', '#FFD700', '#FFFFFF', '#E63946'];
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.backgroundColor = color;
+                        confetti.style.left = `${Math.random() * 100}%`;
+                        confetti.style.top = `${Math.random() * 100}%`;
+                        confetti.style.width = `${Math.random() * 12 + 6}px`;
+                        confetti.style.height = `${Math.random() * 12 + 6}px`;
+                        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                        
+                        confetti.animate([
+                            { opacity: 0, transform: 'translateY(-50px) rotate(0deg)' },
+                            { opacity: 1, transform: `translateY(${Math.random() * 200 + 100}px) rotate(${Math.random() * 360}deg)` },
+                            { opacity: 0, transform: `translateY(${Math.random() * 300 + 200}px) rotate(${Math.random() * 720}deg)` }
+                        ], {
+                            duration: Math.random() * 2000 + 1500,
+                            easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                        });
+                        
+                        resultDialog.appendChild(confetti);
+                        
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 3500);
+                    }, i * 30);
+                }
+            }
+            
+            function closeResultDialog() {
+                resultOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            function updateUI() {
+                // Update discount display
+                if (gameState.discount > 0) {
+                    discountPercent.textContent = `${gameState.discount}%`;
+                }
+                
+                // Update status message with reference code if available
+                if (gameState.lastRollTime) {
+                    const lastRoll = new Date(gameState.lastRollTime);
+                    const formattedTime = lastRoll.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    if (gameState.isRedeemed) {
+                        statusText.textContent = `Redeemed • Code: ${gameState.referenceCode}`;
+                    } else {
+                        statusText.textContent = `Active • Code: ${gameState.referenceCode}`;
+                    }
+                } else {
+                    statusText.textContent = "Tap the button to roll dice!";
+                }
+                
+                // Update roll counter
+                rollCounterElement.textContent = gameState.dailyRolls;
+                
+                // NEW: Check and update expiry
+                checkExpiry();
+            }
+            
+            function showMessage(message) {
+                statusText.textContent = message;
+                if (navigator.vibrate) {
+                    try {
+                        navigator.vibrate(50);
+                    } catch (e) {}
+                }
+            }
+            
+            function shareOnWhatsApp() {
+                const discount = gameState.discount;
+                const date = new Date(gameState.lastRollTime);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                const formattedTime = date.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                const jackpotText = gameState.isJackpot ? "🎊 JACKPOT WINNER + Special Prize! 🎊 " : "";
+                const redeemedText = gameState.isRedeemed ? "✅ REDEEMED • " : "";
+                const message = `${redeemedText}${jackpotText}I rolled the dice at Crossway Restaurant and won ${discount}% discount on ${formattedDate} at ${formattedTime}! Reference Code: ${gameState.referenceCode}. Valid for today only!`;
+                
+                const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+            }
+            
+            function shareOnMessenger() {
+                const discount = gameState.discount;
+                const date = new Date(gameState.lastRollTime);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                const formattedTime = date.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                const jackpotText = gameState.isJackpot ? "🎊 JACKPOT WINNER + Special Prize! 🎊 " : "";
+                const redeemedText = gameState.isRedeemed ? "✅ REDEEMED • " : "";
+                const message = `${redeemedText}${jackpotText}I rolled the dice at Crossway Restaurant and won ${discount}% discount on ${formattedDate} at ${formattedTime}! Reference Code: ${gameState.referenceCode}`;
+                
+                const appUrl = `fb-messenger://share?link=${encodeURIComponent(window.location.href)}`;
+                const webUrl = `https://www.facebook.com/dialog/send?app_id=123456789&link=${encodeURIComponent(window.location.href)}&redirect_uri=${encodeURIComponent(window.location.href)}`;
+                
+                window.location.href = appUrl;
+                
+                setTimeout(() => {
+                    if (document.hasFocus()) {
+                        window.open(webUrl, '_blank');
+                    }
+                }, 500);
+            }
+            
+            function adminReset() {
+                const password = prompt("Enter admin password to reset:");
+                
+                if (password === 'crossway2024') {
+                    resetGameState();
+                    setDiceFace(dice1, 1);
+                    setDiceFace(dice2, 1);
+                    timeLeft = 0;
+                    updateTimerDisplay();
+                    rollButton.disabled = false;
+                    updateUI();
+                    showMessage("Game reset successfully! Ready for new rolls.");
+                } else if (password !== null) {
+                    showMessage("Incorrect password.");
+                }
+            }
+            
+            function setupEventListeners() {
+                rollButton.addEventListener('click', handleRollButton);
+                rollButton.addEventListener('touchstart', handleRollButtonTouch, { passive: true });
+                
+                rollButton.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleRollButton();
+                    }
+                });
+                
+                // NEW: Redeem button event listener
+                redeemButton.addEventListener('click', markAsRedeemed);
+                redeemButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    markAsRedeemed();
+                }, { passive: false });
+                
+                closeResultButton.addEventListener('click', closeResultDialog);
+                closeResultButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeResultDialog();
+                }, { passive: false });
+                
+                whatsappShareButton.addEventListener('click', shareOnWhatsApp);
+                whatsappShareButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    shareOnWhatsApp();
+                }, { passive: false });
+                
+                messengerShareButton.addEventListener('click', shareOnMessenger);
+                messengerShareButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    shareOnMessenger();
+                }, { passive: false });
+                
+                adminResetButton.addEventListener('click', adminReset);
+                
+                resultOverlay.addEventListener('click', function(e) {
+                    if (e.target === resultOverlay) {
+                        closeResultDialog();
+                    }
+                });
+                
+                window.addEventListener('popstate', function() {
+                    if (resultOverlay.classList.contains('active')) {
+                        closeResultDialog();
+                    }
+                });
+                
+                window.addEventListener('beforeunload', saveGameState);
+                
+                document.addEventListener('visibilitychange', function() {
+                    if (!document.hidden) {
+                        checkRollStatus();
+                        updateTimerDisplay();
+                        checkExpiry();
+                        updateUI();
+                    }
+                });
+            }
+            
+            function handleRollButton() {
+                rollDice();
+            }
+            
+            function handleRollButtonTouch(e) {
+                e.preventDefault();
+                rollButton.style.transform = 'scale(0.97)';
+                setTimeout(() => {
+                    rollButton.style.transform = '';
+                }, 150);
+                rollDice();
+            }
+            
+            function preventMobileIssues() {
+                let touchStartY = 0;
+                
+                document.addEventListener('touchstart', function(e) {
+                    touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+                
+                document.addEventListener('touchmove', function(e) {
+                    const touchY = e.touches[0].clientY;
+                    const touchDiff = touchY - touchStartY;
+                    
+                    if (window.scrollY <= 0 && touchDiff > 10) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+                
+                document.addEventListener('gesturestart', function(e) {
+                    e.preventDefault();
+                });
+                
+                function setVH() {
+                    let vh = window.innerHeight * 0.01;
+                    document.documentElement.style.setProperty('--vh', `${vh}px`);
+                }
+                
+                setVH();
+                window.addEventListener('resize', setVH);
+                window.addEventListener('orientationchange', setVH);
+                
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(function() {
+                        document.body.style.display = 'none';
+                        document.body.offsetHeight;
+                        document.body.style.display = '';
+                    }, 100);
+                });
+            }
+            
+            // Initialize the game
+            initGame();
+        });
+    </script>
+</body>
+</html>
